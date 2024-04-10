@@ -11,7 +11,6 @@ class Misc(commands.Cog):
     @discord.app_commands.command()
     async def invite(self, interaction: discord.Interaction):
         """Get the invite link for the bot."""
-        lang = interaction.locale
         text = LANGS.get(interaction.locale, LANGS[discord.Locale.british_english])
 
         embed = discord.Embed(
