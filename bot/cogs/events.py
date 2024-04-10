@@ -24,6 +24,8 @@ class Events(commands.Cog):
         # Delete message if it contains a poll and the author is not a moderator (manage server perms)
         if message.guild and message.poll and not message.author.guild_permissions.manage_guild:
 
+            # await message.delete()
+
             # Send dm
             dm: Dict[str, str] = LANGS.get(message.guild.preferred_locale,LANGS[discord.Locale.british_english])
 
@@ -43,11 +45,32 @@ class Events(commands.Cog):
                     )
                 )
             )
+            view.add_item(
+                discord.ui.Button(
+                    style=discord.ButtonStyle.blurple,
+                    label=dm["why"],
+                    custom_id="poll-bot:why"
+                )
+            )
+
             try:
                 await message.author.send(embed=embed, view=view)
             except discord.HTTPException: # Blocked/Closed dms
                 pass
 
-            await message.delete()
+    @commands.Cog.listener()
+    async def on_interaction(self, interaction: discord.Interaction):
+        if not "custom_id" in interaction.data: return
+        
+        if interaction.data["custom_id"] == "poll-bot:why":
+            dm: Dict[str, str] = LANGS.get(interaction.locale,LANGS[discord.Locale.british_english])
+
+            embed = discord.Embed(
+                title=dm["why"],
+                description=dm["why_desc"],
+                color=discord.Color.blurple()
+            )
+
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
 Cog = Events
