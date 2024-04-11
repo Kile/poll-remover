@@ -11,8 +11,8 @@ from .static.constants import TOKEN, PREFIX
 
 class Bot(commands.AutoShardedBot):
 	def __init__(self, *args, **kwargs):
-		super().__init__(chunk_guilds_at_startup=False, *args, **kwargs)
-
+		super().__init__(chunk_guilds_at_startup=False, max_messages=None, *args, **kwargs)
+        
 		self.session: ClientSession = None
 
 	async def setup_hook(self):
@@ -28,7 +28,10 @@ async def main():
 	basicConfig(level="INFO", datefmt='%I:%M:%S', format="[%(asctime)s] %(levelname)s: %(message)s", stream=stdout)
 
 	session = ClientSession()
-	intents = discord.Intents.default()
+	# Enable the absolute bare minimum of intens
+	intents = discord.Intents.none()
+	intents.guild_messages = True
+	intents.guilds = True
 	intents.message_content = True 
 	# Interestingly, you need this intent
 	# To see if a message has a poll or not
