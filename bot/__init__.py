@@ -11,7 +11,13 @@ from .static.constants import TOKEN, PREFIX
 
 class Bot(commands.AutoShardedBot):
 	def __init__(self, *args, **kwargs):
-		super().__init__(chunk_guilds_at_startup=False, max_messages=None, *args, **kwargs)
+		super().__init__(
+			chunk_guilds_at_startup=False, 
+			max_messages=None, 
+			member_cache_flags=discord.MemberCacheFlags.none(),
+			*args, 
+			**kwargs
+		)
         
 		self.session: ClientSession = None
 
